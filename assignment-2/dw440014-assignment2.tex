@@ -1,0 +1,159 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{indentfirst}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[a4paper, margin = 2 cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{wrapfig}
+\usepackage{hyperref}
+\usepackage{mathtools}
+
+\title{Computational complexity assignment 2}
+\author{Dominik Wawszczak}
+\date{2024-10-31}
+
+\begin{document}
+	\setlength{\parindent}{0 cm}
+	
+	Dominik Wawszczak \hfill Computational Complexity
+	
+	student id number: 440014 \hfill assignment 2
+	
+	group number: 3
+	
+	\bigskip
+	\hrule
+	\bigskip
+	
+	\textbf{Task 1}
+	
+	\medskip
+	
+	To begin, we will show that verifying whether an input contains a tree is
+	indeed in \(\mathbf{L}\). A graph is a tree if and only if it meets the
+	following two conditions:
+	\begin{enumerate}
+		\item The number of edges is one less than the number of vertices.
+		\item The graph is connected.
+	\end{enumerate}
+	Checking the first condition is straightforward. We can iterate over the
+	edges while maintaining a binary counter and then verify if it equals
+	\(n - 1\). This counter will require no more than \(\mathcal{O}(N)\)
+	space, where \(N\) is the size of the input.
+	
+	\medskip
+	
+	The second condition is more complex. We can iterate over all pairs \((s, t)
+	\in \{1, \ldots, n\}^{2}\) using two binary counters. For each pair, we need
+	to determine if a simple path exists from \(s\) to \(t\). This problem is in
+	\(\mathbf{L}\), as discussed in the lecture.
+	
+	\medskip
+	
+	A \textit{root} of a tree with radius at most \(2\) is a vertex \(r \in
+	V(T)\) such that every other vertex in \(T\) is within distance \(2\) of
+	\(r\).
+	
+	\medskip
+	
+	We will use a slightly different definition of an \textit{induced subgraph}
+	than the one in the problem statement. A graph \(G_{1}\) is an induced
+	subgraph of \(G_{2}\) if and only if there exists an injection \(\mu :
+	V(G_{1}) \to V(G_{2})\) such that
+	\[ (u, v) \ \in \ E(G_{1}) \quad \iff \quad (\mu(u), \mu(v)) \ \in \
+	E(G_{2}) \text{,} \]
+	which we will refer to as the \textit{map function}.
+	
+	\medskip
+	
+	Our approach will follow these steps:
+	\begin{enumerate}
+		\item Find a root \(r\) of \(T_{1}\).
+		      
+		      To do this, iterate over all vertices of \(T_{1}\), treating each
+		      vertex as a candidate for \(r\). To verify a candidate, check for
+		      each \(v \in V(T_{1}) \setminus \{r\}\) whether either \((v, r)
+		      \in E(T_{1})\) or there exists a vertex \(u \in V(T_{1}) \setminus
+		      \{v, r\}\) with \((v, u) \in E(T_{1})\) and \((u, r) \in
+		      E(T_{1})\).
+		      
+		      This requires three binary counters (for \(r\), \(v\), and \(u\)).
+		      If no root is found, we can reject the input.
+		
+		\item For each \(s \in V(T_{2})\), check if there exists a valid map
+		      function \(\mu\) such that \(\mu(r) = s\).
+		      
+		      The remaining part of the solution will focus on this check.
+	\end{enumerate}
+	
+	\underline{Lemma 1} Let \(T_{1}\) be a tree of radius \(2\) with root \(r\),
+	and let \(T_{2}\) be any tree. Let \(v_{1}, \ldots, v_{k}\) denote the
+	children of \(r\), ordered so that
+	\[ \underset{i \in \{2, \ldots, k\}}{\forall} \ (\text{deg}(v_{i - 1}),
+	v_{i - 1}) \ \geqslant \ (\text{deg}(v_{i}), v_{i}) \text{,} \]
+	where
+	\[ (a_{1}, b_{1}) \ \geqslant \ (a_{2}, b_{2}) \quad \iff \quad a_{1} >
+	a_{2} \ \vee \ (a_{1} = a_{2} \ \wedge \ b_{1} \geqslant b_{2}) \text{.} \]
+	Let \(s\) be any vertex of \(T_{2}\), and denote \(u_{1}, \ldots, u_{l}\)
+	as the children of \(s\) when \(T_{2}\) is rooted at \(s\), ordered
+	similarly. Then a map function \(\mu\) with the property that \(\mu(r) = s\)
+	exists if and only if
+	\begin{equation} \label{eq:eq1}
+		k \ \leqslant \ l \quad \wedge \quad \underset{i \in \{1, \ldots, k\}}
+		{\forall} \ \text{deg}(v_{i}) \ \leqslant \ \text{deg}(u_{i}) \text{.}
+	\end{equation}
+	
+	\underline{Proof of Lemma 1} If condition \ref{eq:eq1} holds, we can define
+	\(\mu(r) = s\) and set \(\mu(v_{i}) = u_{i}\) for each \(i \in \{1, \ldots,
+	k\}\), ensuring there are enough vertices in \(T_{2}\) to accommodate each
+	grandson of \(r\).
+	
+	\medskip
+	
+	To derive a contradiction, assume there is a map function \(\mu\), but
+	condition \ref{eq:eq1} does not hold. Since \(k \leqslant l\) must be true,
+	there exists an \(i \in \{1, \ldots, k\}\) such that \(\text{deg}(v_{i}) <
+	\text{deg}(u_{i})\). Take the smallest such \(i\). There is a unique \(j\)
+	such that \(\mu(v_{i}) = u_{j}\), which must be less than \(i\), or there
+	would not be enough vertices to match the children of \(v_{i}\); thus \(i >
+	1\). For each \(i' < i\), let \(j'\) be the index with \(\mu(v_{i'}) =
+	u_{j'}\); similarly, \(j'\) must be less than \(i\) because \(\text{deg}(i')
+	\geqslant \text{deg}(i)\). This creates a contradiction by the Pigeonhole
+	principle, since \(\mu\) was assumed to be injective, completing the proof.
+	
+	\medskip
+	
+	Returning to the second step, once we have the root \(r\), finding the
+	number \(k\) of its children requires only one binary counter. For a given
+	\(s \in V(T_{2})\), we can similarly find the number of its children \(l\).
+	By Lemma 1, if \(k > l\), we can discard \(s\) as a candidate. Otherwise, we
+	need to verify for each \(i \in \{1, \ldots, k\}\) whether
+	\(\text{deg}(v_{i}) \leqslant \text{deg}(u_{i})\). To calculate the degree
+	of a vertex, we can iterate over edges while using a single binary counter.
+	However, finding \(v_{i}\) and \(u_{i}\) in logarithmic space is more
+	challenging.
+	
+	\medskip
+	
+	We can determine \((\text{deg}(v_{1}), v_{1})\) by iterating over the sons
+	of \(r\), comparing each \((\text{deg}(v_{\text{cur}}), v_{\text{cur}})\)
+	with the best pair found so far, and updating as needed. We can calculate
+	\((\text{deg}(u_{1}), u_{1})\) in a similar way. After this, we compare
+	\(\text{deg}(v_{1}) \leqslant \text{deg}(u_{1})\) and reject if the
+	condition does not hold; otherwise, we move on to the next pair. Once
+	\((\text{deg}(v_{i}), v_{i})\) is calculated, obtaining
+	\((\text{deg}(v_{i + 1}), v_{i + 1})\) is straightforward -- simply ignore
+	any \((\text{deg}(v_{\text{cur}}), v_{\text{cur}})\) strictly greater than
+	\((\text{deg}(v_{i}), v_{i})\). The same process applies to
+	\((\text{deg}(u_{i + 1}), u_{i + 1})\).
+	
+	\medskip
+	
+	The entire algorithm requires only a constant number of binary counters,
+	concluding the solution.
+\end{document}
