@@ -34,17 +34,18 @@
 	
 	\medskip
 	
-	To begin, we will show that verifying whether an input contains a tree is
-	indeed in \(\mathbf{L}\). A graph is a tree if and only if it meets the
-	following two conditions:
+	To begin, we will show that verifying whether an input contains a tree can
+	be checked using \(\mathcal{O}(\log N)\) memory, where \(N\) is the size of
+	the input. A graph is a tree if and only if it satisfies the following two
+	conditions:
 	\begin{enumerate}
 		\item The number of edges is one less than the number of vertices.
 		\item The graph is connected.
 	\end{enumerate}
 	Checking the first condition is straightforward. We can iterate over the
 	edges while maintaining a binary counter and then verify if it equals
-	\(n - 1\). This counter will require no more than \(\mathcal{O}(N)\)
-	space, where \(N\) is the size of the input.
+	\(n - 1\). This counter will indeed require no more than
+	\(\mathcal{O}(\log N)\) space.
 	
 	\medskip
 	
@@ -55,8 +56,8 @@
 	
 	\medskip
 	
-	A \textit{root} of a tree with radius at most \(2\) is a vertex \(r \in
-	V(T)\) such that every other vertex in \(T\) is within distance \(2\) of
+	A \textit{root} of a tree \(T\) with radius at most \(2\) is a vertex \(r
+	\in V(T)\) such that every other vertex in \(T\) is within distance \(2\) of
 	\(r\).
 	
 	\medskip
@@ -65,8 +66,8 @@
 	than the one in the problem statement. A graph \(G_{1}\) is an induced
 	subgraph of \(G_{2}\) if and only if there exists an injection \(\mu :
 	V(G_{1}) \to V(G_{2})\) such that
-	\[ (u, v) \ \in \ E(G_{1}) \quad \iff \quad (\mu(u), \mu(v)) \ \in \
-	E(G_{2}) \text{,} \]
+	\[ \underset{u \in V(G_{1})}{\forall} \ \underset{v \in V(G_{1})}{\forall} \
+	(u, v) \in E(G_{1}) \ \iff \ (\mu(u), \mu(v)) \in E(G_{2}) \text{,} \]
 	which we will refer to as the \textit{map function}.
 	
 	\medskip
@@ -117,7 +118,7 @@
 	
 	To derive a contradiction, assume there is a map function \(\mu\), but
 	condition \ref{eq:eq1} does not hold. Since \(k \leqslant l\) must be true,
-	there exists an \(i \in \{1, \ldots, k\}\) such that \(\text{deg}(v_{i}) <
+	there exists an \(i \in \{1, \ldots, k\}\) such that \(\text{deg}(v_{i}) >
 	\text{deg}(u_{i})\). Take the smallest such \(i\). There is a unique \(j\)
 	such that \(\mu(v_{i}) = u_{j}\), which must be less than \(i\), or there
 	would not be enough vertices to match the children of \(v_{i}\); thus \(i >
