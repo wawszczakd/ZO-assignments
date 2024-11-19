@@ -163,16 +163,11 @@
 	
 	\medskip
 	
-	To start, we will prove that the language belongs to the NP class. For any
-	induced subgraph \(H\) of \(G\), we need to perform the following steps:
-	\begin{enumerate}
-		\item Verify that \(H\) is a tree.
-		\item Identify the root of \(H\), confirming that \(H\) is a tree of
-		      radius \(2\).
-		\item Compare the multisets of degrees of the children of the roots in
-		      both \(T\) and \(H\).
-	\end{enumerate}
-	Each of these steps can be completed in polynomial time.
+	To start, we will demonstrate that the language belongs to the NP class. We
+	can guess a map function \(f\) and verify its correctness by checking, for
+	every pair of vertices \(u, v \in V(T)\), that
+	\[ (u, v) \in E(T) \ \iff \ (f(u), f(v)) \in E(G) \text{.} \]
+	This verification requires a polynomial number of operations.
 	
 	\medskip
 	
@@ -196,7 +191,7 @@
 	\in V(G^{\ast})\) and three auxiliary vertices: \(a_{1}\), \(a_{2}\), and
 	\(a_{3}\).
 	
-	\newpage
+	\medskip
 	
 	The graph \(G\) will include a special vertex \(s\). For each \(v
 	\in V(G^{\ast})\), the following structure will be added to \(G\):
